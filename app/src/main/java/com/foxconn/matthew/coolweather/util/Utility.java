@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import com.foxconn.matthew.coolweather.db.City;
 import com.foxconn.matthew.coolweather.db.Conty;
 import com.foxconn.matthew.coolweather.db.Province;
+import com.foxconn.matthew.coolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +23,9 @@ public class Utility {
 
     /**
      * 解析和处理服务器返回的省级的数据
+     *
+     * @param response
+     * @return
      */
     public static boolean handleProvinceResponse(String response) {
         if (!TextUtils.isEmpty(response)) {
@@ -43,8 +48,12 @@ public class Utility {
 
     /**
      * 解析和处理服务器返回的市级的数据
+     *
+     * @param response
+     * @param provinceId
+     * @return
      */
-    public static boolean handleCityResponse(String response,int provinceId) {
+    public static boolean handleCityResponse(String response, int provinceId) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCitys = new JSONArray(response);
@@ -66,8 +75,12 @@ public class Utility {
 
     /**
      * 解析和处理服务器返回的市级的数据
+     *
+     * @param response
+     * @param cityId
+     * @return
      */
-    public static boolean handleContyResponse(String response,int cityId) {
+    public static boolean handleContyResponse(String response, int cityId) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allContys = new JSONArray(response);
@@ -85,5 +98,23 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    /**
+     * 将返回的json数据转换为实体类
+     *
+     * @param response
+     * @return
+     */
+    public static Weather handleWeatherResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent, Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
