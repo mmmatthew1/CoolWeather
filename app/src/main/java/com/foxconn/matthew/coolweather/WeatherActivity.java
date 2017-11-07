@@ -1,5 +1,6 @@
 package com.foxconn.matthew.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.foxconn.matthew.coolweather.gson.Forecast;
 import com.foxconn.matthew.coolweather.gson.Weather;
+import com.foxconn.matthew.coolweather.service.AutoUpdateService;
 import com.foxconn.matthew.coolweather.util.HttpUtil;
 import com.foxconn.matthew.coolweather.util.LogUtil;
 import com.foxconn.matthew.coolweather.util.Utility;
@@ -122,10 +124,12 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weather_id
      */
     public void requestWeather(String weather_id) {
+        LogUtil.e(TAG, "requestWeather");
         String weatherUrl = ADDRESS + weather_id + KEY;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                LogUtil.e(TAG, "onFailure");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -137,6 +141,7 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                LogUtil.e(TAG, "onResponse");
                 final String responseText = response.body().string();
                 final Weather weather = Utility.handleWeatherResponse(responseText);
                 runOnUiThread(new Runnable() {
@@ -148,7 +153,9 @@ public class WeatherActivity extends AppCompatActivity {
                                             .edit();
                             editor.putString("weather", responseText);
                             editor.apply();
+
                             showWeatherInfo(weather);
+
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -166,6 +173,9 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weather
      */
     private void showWeatherInfo(Weather weather) {
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
+        LogUtil.e(TAG, "showWeatherInfo");
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "℃";
