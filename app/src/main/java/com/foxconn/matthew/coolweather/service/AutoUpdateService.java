@@ -97,8 +97,7 @@ public class AutoUpdateService extends Service {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                LogUtil.e("autoUpdate","onResponse");
-                String bingPic=response.body().string();
+                LogUtil.e("autoUpdate","onResponse");                String bingPic=response.body().string();
                 SharedPreferences.Editor editor =
                         PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this)
                                 .edit();
