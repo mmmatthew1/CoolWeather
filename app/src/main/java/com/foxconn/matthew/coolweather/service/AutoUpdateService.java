@@ -8,10 +8,8 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.AlarmClock;
 import android.support.annotation.Nullable;
 
-import com.foxconn.matthew.coolweather.WeatherActivity;
 import com.foxconn.matthew.coolweather.gson.Weather;
 import com.foxconn.matthew.coolweather.util.HttpUtil;
 import com.foxconn.matthew.coolweather.util.LogUtil;

@@ -15,12 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.foxconn.matthew.coolweather.MainActivity;
+import com.bigkoo.svprogresshud.SVProgressHUD;
+import com.foxconn.matthew.coolweather.activity.MainActivity;
 import com.foxconn.matthew.coolweather.R;
-import com.foxconn.matthew.coolweather.WeatherActivity;
+import com.foxconn.matthew.coolweather.activity.WeatherActivity;
 import com.foxconn.matthew.coolweather.db.City;
 import com.foxconn.matthew.coolweather.db.Conty;
 import com.foxconn.matthew.coolweather.db.Province;
+import com.foxconn.matthew.coolweather.util.DialogUtil;
 import com.foxconn.matthew.coolweather.util.HttpUtil;
 import com.foxconn.matthew.coolweather.util.LogUtil;
 import com.foxconn.matthew.coolweather.util.Utility;
@@ -95,7 +97,7 @@ public class ChooseAreaFragment extends Fragment {
 
     private static final String ADDRESS = "http://guolin.tech/api/china";
 
-
+    private SVProgressHUD svProgressHUD;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,6 +105,7 @@ public class ChooseAreaFragment extends Fragment {
         titleText = view.findViewById(R.id.title_text);
         backButton = view.findViewById(R.id.back_bt);
         listView = view.findViewById(R.id.list_view);
+        svProgressHUD=new SVProgressHUD(getActivity());
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
         return view;
@@ -205,14 +208,16 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     private void queryFromServer(String address, final String type) {
-        showProgressDialog();
+        //showProgressDialog();
+        DialogUtil.showProgressDialog(svProgressHUD,"正在加载");
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeProgressDialog();
+                        //closeProgressDialog();
+                        DialogUtil.dissmissProgressDialog(svProgressHUD);
                         LogUtil.e(TAG, "加载失败");
                         Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
                     }
@@ -235,7 +240,8 @@ public class ChooseAreaFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            closeProgressDialog();
+                            //closeProgressDialog();
+                            DialogUtil.dissmissProgressDialog(svProgressHUD);
                             if ("Province".equals(type)) {
                                 queryProvince();
                             } else if ("City".equals(type)) {

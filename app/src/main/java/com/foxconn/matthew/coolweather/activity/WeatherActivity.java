@@ -1,4 +1,4 @@
-package com.foxconn.matthew.coolweather;
+package com.foxconn.matthew.coolweather.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -21,14 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.foxconn.matthew.coolweather.R;
 import com.foxconn.matthew.coolweather.gson.Forecast;
 import com.foxconn.matthew.coolweather.gson.Weather;
 import com.foxconn.matthew.coolweather.service.AutoUpdateService;
 import com.foxconn.matthew.coolweather.util.HttpUtil;
 import com.foxconn.matthew.coolweather.util.LogUtil;
 import com.foxconn.matthew.coolweather.util.Utility;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
