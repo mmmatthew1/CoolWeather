@@ -30,6 +30,8 @@ import com.foxconn.matthew.coolweather.util.Utility;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -38,21 +40,36 @@ public class WeatherActivity extends AppCompatActivity {
     private static final String TAG = "WeatherActivity";
     private static final String ADDRESS = "http://guolin.tech/api/weather?cityid=";
     private static final String KEY = "&key=1fa9b214b66d4091bc695d66525f3b53";
-    private ImageView bingPicImg;
+    @BindView(R.id.bing_pic_img)
+    ImageView bingPicImg;
+    @BindView(R.id.swipe_refresh)
     public SwipeRefreshLayout swipeRefresh;
+    @BindView(R.id.drawer_layout)
     public DrawerLayout drawerLayout;
-    private ScrollView weatherLayout;
-    private TextView titleCity;
-    private TextView titleUpdateTime;
-    private Button navButton;
-    private TextView degreeText;
-    private TextView weatherInfoText;
-    private LinearLayout forecastLayout;
-    private TextView aqiText;
-    private TextView pm25Text;
-    private TextView comfortText;
-    private TextView carWashText;
-    private TextView sportText;
+    @BindView(R.id.weather_layout)
+    ScrollView weatherLayout;
+    @BindView(R.id.title_city)
+    TextView titleCity;
+    @BindView(R.id.title_update_time)
+    TextView titleUpdateTime;
+    @BindView(R.id.nav_button)
+    Button navButton;
+    @BindView(R.id.degree_text)
+    TextView degreeText;
+    @BindView(R.id.weather_info_text)
+    TextView weatherInfoText;
+    @BindView(R.id.forecast_layout)
+    LinearLayout forecastLayout;
+    @BindView(R.id.aqi_text)
+    TextView aqiText;
+    @BindView(R.id.pm25_text)
+    TextView pm25Text;
+    @BindView(R.id.comfort_text)
+    TextView comfortText;
+    @BindView(R.id.car_wash_text)
+    TextView carWashText;
+    @BindView(R.id.sport_text)
+    TextView sportText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,23 +81,8 @@ public class WeatherActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_weather);
-        //初始化控件
-        bingPicImg = findViewById(R.id.bing_pic_img);
-        weatherLayout = findViewById(R.id.weather_layout);
-        titleCity = findViewById(R.id.title_city);
-        titleUpdateTime = findViewById(R.id.title_update_time);
-        degreeText = findViewById(R.id.degree_text);
-        weatherInfoText = findViewById(R.id.weather_info_text);
-        forecastLayout = findViewById(R.id.forecast_layout);
-        aqiText = findViewById(R.id.aqi_text);
-        pm25Text = findViewById(R.id.pm25_text);
-        comfortText = findViewById(R.id.comfort_text);
-        carWashText = findViewById(R.id.car_wash_text);
-        sportText = findViewById(R.id.sport_text);
-        swipeRefresh = findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navButton = findViewById(R.id.nav_button);
+        ButterKnife.bind(this);
+
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

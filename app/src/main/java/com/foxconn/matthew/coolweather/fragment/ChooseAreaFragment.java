@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -51,9 +55,16 @@ public class ChooseAreaFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
-    private TextView titleText;
-    private Button backButton;
-    private ListView listView;
+    @BindView(R.id.title_text)
+    TextView titleText;
+    @BindView(R.id.back_bt)
+    Button backButton;
+    @BindView(R.id.list_view)
+    ListView listView;
+    @BindView(R.id.ll_data)
+    LinearLayout ll_data;
+    @BindView(R.id.ll_try_again)
+    LinearLayout ll_try_again;
 
     private ArrayAdapter<String> adapter;
 
@@ -98,23 +109,31 @@ public class ChooseAreaFragment extends Fragment {
     private static final String ADDRESS = "http://guolin.tech/api/china";
 
     private SVProgressHUD svProgressHUD;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        LogUtil.e(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.choose_area, container, false);
-        titleText = view.findViewById(R.id.title_text);
-        backButton = view.findViewById(R.id.back_bt);
-        listView = view.findViewById(R.id.list_view);
-        svProgressHUD=new SVProgressHUD(getActivity());
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, dataList);
-        listView.setAdapter(adapter);
+        ButterKnife.bind(this, view);
         return view;
+    }
+    @OnClick(R.id.btn_try_again)
+    public void onClick(View view){
+        queryProvince();
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        LogUtil.e(TAG, "onActivityCreated");
+        svProgressHUD = new SVProgressHUD(getActivity());
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, dataList);
+        LogUtil.e(TAG, (listView == null) + "");
+        LogUtil.e(TAG, (titleText == null) + "");
+        LogUtil.e(TAG, (backButton == null) + "");
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,8 +150,8 @@ public class ChooseAreaFragment extends Fragment {
                         intent.putExtra("weather_id", weatherId);
                         startActivity(intent);
                         getActivity().finish();
-                    }else if(getActivity() instanceof WeatherActivity){
-                        WeatherActivity weatherActivity= (WeatherActivity) getActivity();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity weatherActivity = (WeatherActivity) getActivity();
                         weatherActivity.drawerLayout.closeDrawers();
                         weatherActivity.swipeRefresh.setRefreshing(true);
                         weatherActivity.requestWeather(weatherId);
@@ -208,18 +227,20 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     private void queryFromServer(String address, final String type) {
-        //showProgressDialog();
-        DialogUtil.showProgressDialog(svProgressHUD,"正在加载");
+        DialogUtil.showProgressDialog(svProgressHUD, "正在加载");
+        ll_try_again.setVisibility(View.GONE);
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //closeProgressDialog();
                         DialogUtil.dissmissProgressDialog(svProgressHUD);
                         LogUtil.e(TAG, "加载失败");
                         Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                        if("Province".equals(type)){
+                            ll_try_again.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
@@ -240,7 +261,6 @@ public class ChooseAreaFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //closeProgressDialog();
                             DialogUtil.dissmissProgressDialog(svProgressHUD);
                             if ("Province".equals(type)) {
                                 queryProvince();

@@ -31,4 +31,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     //提示库
     compile 'com.bigkoo:svprogresshud:1.0.4'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
